@@ -3,22 +3,12 @@ $(document).ready(function () {
 
 	$('#intro').modal('show');
 
-	//variable declarations   
-	hue = {}
-	sat = {}
-	bri = {}
-	itemname = ["fringe", "back", "topa", "bottom",
-		"eyes", "eyebrows", "mouth", "topb",
-		"dress", "shoes", "hat", "acc",
-		"ltph", "beard", "eyewear", "emotion",
-		"other", "cape", "scarf"
-	];
-	itemdirlength = [21, 23, 22, 20,
-		15, 10, 17, 11,
-		8, 7, 19, 18,
-		10, 3, 13, 5,
-		6, 6, 11
-	];
+	//variable declarations
+	color = {
+		hue: {},
+		saturation: {},
+		brightness: {}
+	};
 	items = {
 		fringe: 21,
 		back: 23,
@@ -102,9 +92,9 @@ $(document).ready(function () {
 function setColor(instance) {
 	current = instance;
 	if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "ltph") {
-		document.getElementById("Slider-hue").value = hue[current];
-		document.getElementById("Slider-sat").value = sat[current];
-		document.getElementById("Slider-bri").value = bri[current];
+		document.getElementById("Slider-hue").value = color.hue[current];
+		document.getElementById("Slider-sat").value = color.saturation[current];
+		document.getElementById("Slider-bri").value = color.brightness[current];
 	}	
 } //set sliders to which item is selected
 
@@ -118,22 +108,22 @@ function randomizer() {
 	//global 'variable' variables for changing color
 	for (var name in items) {
 		if (name !== "eyes" && name !== "eyebrows" && name !== "mouth" && name !== "acc" && name !== "ltph" && name !== "emotion" && name !== "other") {
-			hue[name] = Math.floor(Math.random() * 360);
-			sat[name] = Math.floor(Math.random() * 50);
-			bri[name] = Math.floor(Math.random() * 500);
+			color.hue[name] = Math.floor(Math.random() * 360);
+			color.saturation[name] = Math.floor(Math.random() * 50);
+			color.brightness[name] = Math.floor(Math.random() * 500);
 
-			if (bri[name] <= 40) {
-				bri[name] = 40;
+			if (color.brightness[name] <= 40) {
+				color.brightness[name] = 40;
 			}
 		}
 	}
 
-	hue.back = hue.fringe;
-	sat.back = sat.fringe;
-	bri.back = bri.fringe;
-	hue.beard = hue.fringe;
-	sat.beard = sat.fringe;
-	bri.beard = bri.fringe;
+	color.hue.back = color.hue.fringe;
+	color.saturation.back = color.saturation.fringe;
+	color.brightness.back = color.brightness.fringe;
+	color.hue.beard = color.hue.fringe;
+	color.saturation.beard = color.saturation.fringe;
+	color.brightness.beard = color.brightness.fringe;
 
 	setColor(current); //set sliders to which item is selected
 
@@ -147,7 +137,7 @@ function randomizer() {
 		}
 
 		if (name !== "eyes" && name !== "eyebrows" && name !== "mouth" && name !== "acc" && name !== "ltph" && name !== "emotion" && name !== "other") {
-			item.style.filter = "hue-rotate(" + hue[name] + "deg) saturate(" + sat[name] + "%) brightness(" + bri[name] + "%)";
+			item.style.filter = "hue-rotate(" + color.hue[name] + "deg) saturate(" + color.saturation[name] + "%) brightness(" + color.brightness[name] + "%)";
 		}
 	}
 
@@ -215,9 +205,9 @@ function picker(a, b, c) {
 		&& current !== "ltph" && current !== "emotion" && current !== "other") {
 		var currentElement = document.getElementById(current);
 		currentElement.filter = "hue-rotate(" + a + "deg) saturate(" + b + "%) brightness(" + c + "%)";
-		hue[current] = a;
-		sat[current] = b;
-		bri[current] = c;
+		color.hue[current] = a;
+		color.saturation[current] = b;
+		color.brightness[current] = c;
 		setColor(current);
 	}
 
@@ -229,9 +219,9 @@ function picker(a, b, c) {
 			var hairElement = document.getElementById(hairType);
 			hairElement.style.filter = "hue-rotate(" + a + "deg) saturate(" + b + "%) brightness(" + c + "%)";
 
-			hue[hairType] = a;
-			sat[hairType] = b;
-			bri[hairType] = c;
+			color.hue[hairType] = a;
+			color.saturation[hairType] = b;
+			color.brightness[hairType] = c;
 			setColor(hairType);
 		}
 	}
@@ -242,17 +232,17 @@ function picker(a, b, c) {
 document.getElementById("Slider-hue").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
 		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + sat.fringe + "%) brightness(" + bri.fringe + "%)";
+			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.fringe + "%) brightness(" + color.brightness.fringe + "%)";
 
 		document.getElementById("back").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + sat.back + "%) brightness(" + bri.back + "%)";
+			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.back + "%) brightness(" + color.brightness.back + "%)";
 
 		document.getElementById("beard").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + sat.beard + "%) brightness(" + bri.beard + "%)";
+			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.beard + "%) brightness(" + color.brightness.beard + "%)";
 
-		hue.fringe = this.value;
-		hue.back = this.value;
-		hue.beard = this.value;
+		color.hue.fringe = this.value;
+		color.hue.back = this.value;
+		color.hue.beard = this.value;
 	} else if (current == "eyes" ||
 		current == "eyebrows" ||
 		current == "mouth" ||
@@ -261,8 +251,8 @@ document.getElementById("Slider-hue").oninput = function () {
 		current == "emotion" ||
 		current == "other") {} else {
 		document.getElementById(current).style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + sat[current] + "%) brightness(" + bri[current] + "%)";
-		hue[current] = this.value;
+			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation[current] + "%) brightness(" + color.brightness[current] + "%)";
+			color.hue[current] = this.value;
 	}
 } //hue      
 
@@ -270,17 +260,17 @@ document.getElementById("Slider-hue").oninput = function () {
 document.getElementById("Slider-sat").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
 		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + hue.fringe + "deg) saturate(" + this.value + "%) brightness(" + bri.fringe + "%)";
+			"hue-rotate(" + color.hue.fringe + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.fringe + "%)";
 
 		document.getElementById("back").style.filter =
-			"hue-rotate(" + hue.back + "deg) saturate(" + this.value + "%) brightness(" + bri.back + "%)";
+			"hue-rotate(" + color.hue.back + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.back + "%)";
 
 		document.getElementById("beard").style.filter =
-			"hue-rotate(" + hue.beard + "deg) saturate(" + this.value + "%) brightness(" + bri.beard + "%)";
+			"hue-rotate(" + color.hue.beard + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.beard + "%)";
 
-		sat.fringe = this.value;
-		sat.back = this.value;
-		sat.beard = this.value;
+		color.saturation.fringe = this.value;
+		color.saturation.back = this.value;
+		color.saturation.beard = this.value;
 	} else if (current == "eyes" ||
 		current == "eyebrows" ||
 		current == "mouth" ||
@@ -289,8 +279,8 @@ document.getElementById("Slider-sat").oninput = function () {
 		current == "emotion" ||
 		current == "other") {} else {
 		document.getElementById(current).style.filter =
-			"hue-rotate(" + hue[current] + "deg) saturate(" + this.value + "%) brightness(" + bri[current] + "%)";
-		sat[current] = this.value;
+			"hue-rotate(" + color.hue[current] + "deg) saturate(" + this.value + "%) brightness(" + color.brightness[current] + "%)";
+		color.saturation[current] = this.value;
 	}
 } //saturation 
 
@@ -298,17 +288,17 @@ document.getElementById("Slider-sat").oninput = function () {
 document.getElementById("Slider-bri").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
 		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + hue.fringe + "deg) saturate(" + sat.fringe + "%) brightness(" + this.value + "%)";
+			"hue-rotate(" + color.hue.fringe + "deg) saturate(" + color.saturation.fringe + "%) brightness(" + this.value + "%)";
 
 		document.getElementById("back").style.filter =
-			"hue-rotate(" + hue.back + "deg) saturate(" + sat.back + "%) brightness(" + this.value + "%)";
+			"hue-rotate(" + color.hue.back + "deg) saturate(" + color.saturation.back + "%) brightness(" + this.value + "%)";
 
 		document.getElementById("back").style.filter =
-			"hue-rotate(" + hue.beard + "deg) saturate(" + sat.beard + "%) brightness(" + this.value + "%)";
+			"hue-rotate(" + color.hue.beard + "deg) saturate(" + color.saturation.beard + "%) brightness(" + this.value + "%)";
 
-		bri.fringe = this.value;
-		bri.back = this.value;
-		bri.beard = this.value;
+		color.brightness.fringe = this.value;
+		color.brightness.back = this.value;
+		color.brightness.beard = this.value;
 	} else if (current == "eyes" ||
 		current == "eyebrows" ||
 		current == "mouth" ||
@@ -317,8 +307,8 @@ document.getElementById("Slider-bri").oninput = function () {
 		current == "emotion" ||
 		current == "other") {} else {
 		document.getElementById(current).style.filter =
-			"hue-rotate(" + hue[current] + "deg) saturate(" + sat[current] + "%) brightness(" + this.value + "%)";
-		bri[current] = this.value;
+			"hue-rotate(" + color.hue[current] + "deg) saturate(" + color.saturation[current] + "%) brightness(" + this.value + "%)";
+		color.brightness[current] = this.value;
 	}
 } //brightness
 //-----------------------------------------------------------------------------------------------------------------------------------------------
