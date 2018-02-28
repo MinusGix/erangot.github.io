@@ -9,7 +9,7 @@ $(document).ready(function () {
 		saturation: {},
 		brightness: {}
 	};
-	items = {
+	items = { // [name]: [amount of images]
 		fringe: 21,
 		back: 23,
 		topa: 22,
@@ -50,7 +50,7 @@ $(document).ready(function () {
 	
 
 	//generates color picker palette
-	var x = 1; //picker id
+	var pickerID = 1; //picker id
 	var hu = [0, 45, 70, 100, 200, 300]; //picker hue
 	var br = 500; //picker brightness  
 
@@ -61,21 +61,21 @@ $(document).ready(function () {
 			for (var c = 0; c <= 1; c++) { //saturation                  
 				var picker = document.createElement("div");
 
-				picker.setAttribute("id", "picker" + x);
+				picker.setAttribute("id", "picker" + pickerID);
 				picker.setAttribute("class", "picker");
 				picker.setAttribute("onClick", "picker(" + hu[b] + " ," + saturation + " ," + br + ")");
 
 				$(".color-picker").append(picker);
 
-				document.getElementById("picker" + x).style.filter =
+				document.getElementById("picker" + pickerID).style.filter =
 					"hue-rotate(" + hu[b] + "deg) saturate(" + saturation + "%) brightness(" + br + "%)";
 
-				x = x + 1;
-				saturation = saturation + 30;
+				pickerID++;
+				saturation += 30;
 			}
 			//no changes on hue    
 		}
-		br = br - 210;
+		br -= 210;
 	}
 
 	//initialize to eyes items
@@ -90,7 +90,7 @@ $(document).ready(function () {
 //ALL MOTHAFUKCIN FUNCTIONS-----------------------------------------------------------------------------------------------------
 
 function setColor(instance) {
-	current = instance;
+	//current = instance;
 	if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "ltph") {
 		document.getElementById("Slider-hue").value = color.hue[current];
 		document.getElementById("Slider-sat").value = color.saturation[current];
@@ -178,15 +178,15 @@ function clearImg() {
 	}
 } //resets current appearance
 
-function selectItem(val) {
+function selectItem(item) {
 	document.getElementById("skinTab").style = "display: none";
 
 	for (var name in items) {
 		document.getElementById(name + "Tab").style = "display: none";
 	}
 	//selected = val;
-	document.getElementById(val + "Tab").style = "display: block";
-	setColor(val);
+	document.getElementById(item + "Tab").style = "display: block";
+	setColor(item);
 
 } //select items from dropdown menu
 
@@ -200,14 +200,15 @@ function showCustom() {
 	document.getElementById("color-picker").style = "display: none";
 } //shows custom color menu
 
-function picker(a, b, c) {
+function picker(hue, saturation, brightness) {
 	if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "acc" 
 		&& current !== "ltph" && current !== "emotion" && current !== "other") {
 		var currentElement = document.getElementById(current);
-		currentElement.filter = "hue-rotate(" + a + "deg) saturate(" + b + "%) brightness(" + c + "%)";
-		color.hue[current] = a;
-		color.saturation[current] = b;
-		color.brightness[current] = c;
+		currentElement.filter = "hue-rotate(" + hue + "deg) saturate(" + saturation + "%) brightness(" + brightness + "%)";
+		color.hue[current] = hue;
+		color.saturation[current] = saturation;
+		color.brightness[current] = brightness;
+
 		setColor(current);
 	}
 
@@ -217,98 +218,68 @@ function picker(a, b, c) {
 			var hairType = hair[i];
 
 			var hairElement = document.getElementById(hairType);
-			hairElement.style.filter = "hue-rotate(" + a + "deg) saturate(" + b + "%) brightness(" + c + "%)";
+			hairElement.style.filter = "hue-rotate(" + hue + "deg) saturate(" + saturation + "%) brightness(" + brightness + "%)";
 
-			color.hue[hairType] = a;
-			color.saturation[hairType] = b;
-			color.brightness[hairType] = c;
+			color.hue[hairType] = hue;
+			color.saturation[hairType] = saturation;
+			color.brightness[hairType] = brightness;
 			setColor(hairType);
 		}
 	}
 } //premade color palette
+
+function setFilter (name) {
+	let element = document.getElementById(name);
+	if (!element) throw new TypeError(name + " is not a valid id for setting a filter on!");
+
+	element.style.filter = `hue-rotate(${color.hue[name]}) saturate(${color.saturation[name]}) brightness(${color.brightness[name]})`;
+}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 
 //----VALUES FOR GENERAL COLOR SLIDER----------------------------------------------------------------------------------------------------------
 document.getElementById("Slider-hue").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
-		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.fringe + "%) brightness(" + color.brightness.fringe + "%)";
-
-		document.getElementById("back").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.back + "%) brightness(" + color.brightness.back + "%)";
-
-		document.getElementById("beard").style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation.beard + "%) brightness(" + color.brightness.beard + "%)";
-
 		color.hue.fringe = this.value;
 		color.hue.back = this.value;
 		color.hue.beard = this.value;
-	} else if (current == "eyes" ||
-		current == "eyebrows" ||
-		current == "mouth" ||
-		current == "acc" ||
-		current == "ltph" ||
-		current == "emotion" ||
-		current == "other") {} else {
-		document.getElementById(current).style.filter =
-			"hue-rotate(" + this.value + "deg) saturate(" + color.saturation[current] + "%) brightness(" + color.brightness[current] + "%)";
-			color.hue[current] = this.value;
+		
+		setFilter("fringe");
+		setFilter("back");
+		setFilter("beard");
+	} else if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "acc" && current !== "ltph" && current !== "emotion" && current !== "other") {
+		color.hue[current] = this.value;
+		setFilter(current);
 	}
 } //hue      
 
 
 document.getElementById("Slider-sat").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
-		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + color.hue.fringe + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.fringe + "%)";
-
-		document.getElementById("back").style.filter =
-			"hue-rotate(" + color.hue.back + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.back + "%)";
-
-		document.getElementById("beard").style.filter =
-			"hue-rotate(" + color.hue.beard + "deg) saturate(" + this.value + "%) brightness(" + color.brightness.beard + "%)";
-
 		color.saturation.fringe = this.value;
 		color.saturation.back = this.value;
 		color.saturation.beard = this.value;
-	} else if (current == "eyes" ||
-		current == "eyebrows" ||
-		current == "mouth" ||
-		current == "acc" ||
-		current == "ltph" ||
-		current == "emotion" ||
-		current == "other") {} else {
-		document.getElementById(current).style.filter =
-			"hue-rotate(" + color.hue[current] + "deg) saturate(" + this.value + "%) brightness(" + color.brightness[current] + "%)";
+
+		setFilter("fringe");
+		setFilter("back");
+		setFilter("beard");
+	} else if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "acc" && current !== "ltph" && current !== "emotion" && current !== "other") {
 		color.saturation[current] = this.value;
+		setFilter(current);
 	}
 } //saturation 
 
-
 document.getElementById("Slider-bri").oninput = function () {
 	if (current == "fringe" || current == "back" || current == "beard") {
-		document.getElementById("fringe").style.filter =
-			"hue-rotate(" + color.hue.fringe + "deg) saturate(" + color.saturation.fringe + "%) brightness(" + this.value + "%)";
-
-		document.getElementById("back").style.filter =
-			"hue-rotate(" + color.hue.back + "deg) saturate(" + color.saturation.back + "%) brightness(" + this.value + "%)";
-
-		document.getElementById("back").style.filter =
-			"hue-rotate(" + color.hue.beard + "deg) saturate(" + color.saturation.beard + "%) brightness(" + this.value + "%)";
-
 		color.brightness.fringe = this.value;
 		color.brightness.back = this.value;
 		color.brightness.beard = this.value;
-	} else if (current == "eyes" ||
-		current == "eyebrows" ||
-		current == "mouth" ||
-		current == "acc" ||
-		current == "ltph" ||
-		current == "emotion" ||
-		current == "other") {} else {
-		document.getElementById(current).style.filter =
-			"hue-rotate(" + color.hue[current] + "deg) saturate(" + color.saturation[current] + "%) brightness(" + this.value + "%)";
+
+		setFilter("fringe");
+		setFilter("back");
+		setFilter("beard");
+	} else if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "acc" && current !== "ltph" && current !== "emotion" && current !== "other") {
 		color.brightness[current] = this.value;
+		setFilter(current);
 	}
 } //brightness
 //-----------------------------------------------------------------------------------------------------------------------------------------------
