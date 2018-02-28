@@ -38,28 +38,27 @@ $(document).ready(function () {
 	hair = ["fringe", "back", "beard"]; //hair items are items that have same color.
 
 	//initialize all content in ITEM DRAWER tab
-	for (var name in items) {
-		for (var i = 1; i <= items[name]; i++) {
-			var img = document.createElement('img');
+	for (let name in items) {
+		for (let i = 1; i <= items[name]; i++) {
+			let img = document.createElement('img');
 			img.setAttribute("src", "img/" + name + "/" + name + i + ".png");
 			img.setAttribute("class", "item-option");
 			img.setAttribute("onClick", "changeImg('" + name + "', " + i + ");");
 			$("." + name + "Items").append(img);
 		}
 	}
-	
 
 	//generates color picker palette
-	var pickerID = 1;
-	var pickerHue = [0, 45, 70, 100, 200, 300];
-	var pickerBrightness = 500;
+	let pickerID = 1;
+	let pickerHue = [0, 45, 70, 100, 200, 300];
+	let pickerBrightness = 500;
 
-	for (var brightnessLevel = 0; brightnessLevel < 3; brightnessLevel++) {
-		for (var currentHue = 0; currentHue < 6; currentHue++) {
-			var saturation = 10;
+	for (let brightnessLevel = 0; brightnessLevel < 3; brightnessLevel++) {
+		for (let currentHue = 0; currentHue < 6; currentHue++) {
+			let saturation = 10;
 			// for (var saturation = 10; saturation < 70; saturation += 30) { but that's ugly.
-			for (var c = 0; c < 2; c++) { //saturation                  
-				var picker = document.createElement("div");
+			for (let c = 0; c < 2; c++) { //saturation                  
+				let picker = document.createElement("div");
 
 				picker.setAttribute("id", "picker" + pickerID);
 				picker.setAttribute("class", "picker");
@@ -88,6 +87,7 @@ $(document).ready(function () {
 //set sliders to which item is selected
 function setColor(instance) {
 	current = instance;
+	
 	if (current !== "eyes" && current !== "eyebrows" && current !== "mouth" && current !== "ltph") {
 		document.getElementById("Slider-hue").value = color.hue[current];
 		document.getElementById("Slider-sat").value = color.saturation[current];
@@ -96,14 +96,14 @@ function setColor(instance) {
 } 
 
 function randomizer() {
-	var skin = Math.floor(Math.random() * 6);
+	let skin = Math.floor(Math.random() * 6);
 	if (skin == 0) {
 		skin = 1;
 	}
 	document.getElementById("base").src = ("img/base/base" + skin + ".png");
 
 	//global 'variable' variables for changing color
-	for (var name in items) {
+	for (let name in items) {
 		if (name !== "eyes" && name !== "eyebrows" && name !== "mouth" && name !== "acc" && name !== "ltph" && name !== "emotion" && name !== "other") {
 			color.hue[name] = Math.floor(Math.random() * 360);
 			color.saturation[name] = Math.floor(Math.random() * 50);
@@ -126,9 +126,9 @@ function randomizer() {
 	setColor(current); //set sliders to which item is selected
 
 	//random select images from folder
-	for (var name in items) {
-		var item = document.getElementById(name);
-		var randomVal = Math.floor(Math.random() * items[name]);
+	for (let name in items) {
+		let item = document.getElementById(name);
+		let randomVal = Math.floor(Math.random() * items[name]);
 
 		if (name !== 'shoes' && name !== 'beard' && name !== 'eyewear') {
 			item.src = "img/" + name + "/" + name + (randomVal + 1) + ".png";
@@ -140,7 +140,7 @@ function randomizer() {
 	}
 
 
-	var dressOrNot = Math.floor(Math.random() * 3);
+	let dressOrNot = Math.floor(Math.random() * 3);
 	// Randomly gets if base wears a dress or not. 0 for normal and 1 for dress.
 
 	if (dressOrNot == 0) { // Resets Top A, B and Bottom if Dress is present.
@@ -150,7 +150,7 @@ function randomizer() {
 		document.getElementById("cape").src = "img/cape/cape1.png";
 		document.getElementById("scarf").src = "img/scarf/scarf1.png";
 
-		var dress = 0;
+		let dress = 0;
 		while (dress <= 1) {
 			dress = Math.floor(Math.random() * items.dress + 1);
 		}
@@ -169,10 +169,10 @@ function changeImg(item, num) {
 
 //resets current appearance
 function clearImg() {
-	var itemNames = ["topa", "topb", "bottom", "dress", "shoes", "hat",
+	let itemNames = ["topa", "topb", "bottom", "dress", "shoes", "hat",
 		"acc", "ltph", "eyewear", "emotion", "other", "cape", "scarf"
 	];
-	for (var i = 0; i < itemNames.length; i++) {
+	for (let i = 0; i < itemNames.length; i++) {
 		let name = itemNames[i];
 		document.getElementById(name).src = "img/" + name + "/" + name + "1.png";
 	}
@@ -183,7 +183,7 @@ function clearImg() {
 function selectItem(item) {
 	document.getElementById("skinTab").style = "display: none";
 
-	for (var name in items) {
+	for (let name in items) {
 		document.getElementById(name + "Tab").style = "display: none";
 	}
 
@@ -217,8 +217,8 @@ function picker(hue, saturation, brightness) {
 	}
 
 	if (hair.includes(current)) {
-		for (var i = 0; i < hair.length; i++) {
-			var hairType = hair[i];
+		for (let i = 0; i < hair.length; i++) {
+			let hairType = hair[i];
 
 			color.hue[hairType] = hue;
 			color.saturation[hairType] = saturation;
