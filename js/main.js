@@ -124,19 +124,22 @@ function setColor(instance) {
 	}	
 } 
 
+function randomNumber(min=0, max=10) {
+	return Math.floor(Math.random() * (max - min)) + min; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+}
+
 function randomizer() {
-	let skin = Math.floor(Math.random() * 6);
-	if (skin == 0) {
-		skin = 1;
-	}
+	let skin = randomNumber(1, 6); // 1, 2, 3, 4, 5
 	document.getElementById("base").src = ("img/base/base" + skin + ".png");
 
 	for (let name in items) {
 		if (name !== "eyes" && name !== "eyebrows" && name !== "mouth" && name !== "acc" && name !== "ltph" && name !== "emotion" && name !== "other") {
 			let item = items[name];
-			item.hue = Math.floor(Math.random() * 360);
-			item.saturation = Math.floor(Math.random() * 50);
-			item.brightness = Math.floor(Math.random() * 500);
+			item.set(
+				randomNumber(0, 360),
+				randomNumber(0, 50),
+				randomNumber(0, 500)
+			);
 
 			if (item.brightness <= 40) {
 				item.brightness = 40;
@@ -152,10 +155,10 @@ function randomizer() {
 	//random select images from folder
 	for (let name in items) {
 		let item = document.getElementById(name);
-		let randomVal = Math.floor(Math.random() * items[name].amount);
+		let randomVal = randomNumber(0, items[name].amount) + 1;
 
 		if (name !== 'shoes' && name !== 'beard' && name !== 'eyewear') {
-			item.src = "img/" + name + "/" + name + (randomVal + 1) + ".png";
+			item.src = "img/" + name + "/" + name + randomVal + ".png";
 		}
 
 		if (name !== "eyes" && name !== "eyebrows" && name !== "mouth" && name !== "acc" && name !== "ltph" && name !== "emotion" && name !== "other") {
@@ -164,10 +167,10 @@ function randomizer() {
 	}
 
 
-	let dressOrNot = Math.floor(Math.random() * 3);
+	let hasDress = randomNumber(0, 3) === 0;
 	// Randomly gets if base wears a dress or not. 0 for normal and 1 for dress.
 
-	if (dressOrNot == 0) { // Resets Top A, B and Bottom if Dress is present.
+	if (hasDress) { // Resets Top A, B and Bottom if Dress is present.
 		document.getElementById("topa").src = "img/topa/topa1.png";
 		document.getElementById("topb").src = "img/topb/topb1.png";
 		document.getElementById("bottom").src = "img/bottom/bottom1.png";
@@ -176,7 +179,7 @@ function randomizer() {
 
 		let dress = 0;
 		while (dress <= 1) {
-			dress = Math.floor(Math.random() * items.dress.amount + 1);
+			dress = randomNumber(1, items.dress.amount + 1)
 		}
 
 		document.getElementById("dress").src = "img/dress/dress" + dress + ".png";
@@ -204,15 +207,15 @@ function clearImg() {
 
 // ran in the html file
 //select items from dropdown menu
-function selectItem(item) {
+function setTab(itemName) {
 	document.getElementById("skinTab").style = "display: none";
 
 	for (let name in items) {
 		document.getElementById(name + "Tab").style = "display: none";
 	}
 
-	document.getElementById(item + "Tab").style = "display: block";
-	setColor(items[item]);
+	document.getElementById(itemName + "Tab").style = "display: block";
+	setColor(items[itemName]);
 }
 
 //shows color picker menu
