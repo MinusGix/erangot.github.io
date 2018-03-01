@@ -249,53 +249,21 @@ function picker(hue, saturation, brightness) {
 } 
 
 function setFilter (item) {
-	console.log(item);
 	document.getElementById(item.name).style.filter = `hue-rotate(${item.hue}deg) saturate(${item.saturation}%) brightness(${item.brightness}%)`;
 }
 
 //----VALUES FOR GENERAL COLOR SLIDER-------------------
-document.getElementById("Slider-hue").oninput = function () {
+["hue", "saturation", "brightness"].forEach(attribute => document.getElementById("Slider-" + attribute).addEventListener("input", function (evt) {
 	if (hair.includes(current)) {
-		items.fringe.hue = this.value;
-		items.back.hue = this.value;
-		items.beard.hue = this.value;
-		
-		setFilter(items.fringe);
-		setFilter(items.back);
-		setFilter(items.beard);
-	} else if (current.name !== "eyes" && current.name !== "eyebrows" && current.name !== "mouth" && current.name !== "acc" && current.name !== "ltph" && current.name !== "emotion" && current.name !== "other") {
-		current.hue = this.value;
-		setFilter(current);
-	}
-}
-
-
-document.getElementById("Slider-saturation").oninput = function () {
-	if (hair.includes(current)) {
-		items.fringe.saturation = this.value;
-		items.back.saturation = this.value;
-		items.beard.saturation = this.value;
+		items.fringe[attribute] = this.value;
+		items.back[attribute] = this.value;
+		items.beard[attribute] = this.value;
 
 		setFilter(items.fringe);
 		setFilter(items.back);
 		setFilter(items.beard);
-	} else if (current.name !== "eyes" && current.name !== "eyebrows" && current.name !== "mouth" && current.name !== "acc" && current.name !== "ltph" && current.name !== "emotion" && current.name !== "other") {
-		current.saturation = this.value;
+	} else if (!["eyes", "eyebrows", "mouth", "acc", "ltph", "emotion", "other"].includes(current.name)) {
+		current[attribute] = this.value;
 		setFilter(current);
 	}
-}
-
-document.getElementById("Slider-brightness").oninput = function () {
-	if (hair.includes(current)) {
-		items.fringe.brightness = this.value;
-		items.back.brightness = this.value;
-		items.beard.brightness = this.value;
-
-		setFilter(items.fringe);
-		setFilter(items.back);
-		setFilter(items.beard);
-	} else if (current.name !== "eyes" && current.name !== "eyebrows" && current.name !== "mouth" && current.name !== "acc" && current.name !== "ltph" && current.name !== "emotion" && current.name !== "other") {
-		current.brightness = this.value;
-		setFilter(current);
-	}
-}
+}));
