@@ -119,8 +119,8 @@ function setColor(instance) {
 	
 	if (current.name !== "eyes" && current.name !== "eyebrows" && current.name !== "mouth" && current.name !== "ltph") {
 		document.getElementById("Slider-hue").value = current.hue;
-		document.getElementById("Slider-sat").value = current.saturation;
-		document.getElementById("Slider-bri").value = current.brightness;
+		document.getElementById("Slider-saturation").value = current.saturation;
+		document.getElementById("Slider-brightness").value = current.brightness;
 	}	
 } 
 
@@ -270,7 +270,7 @@ document.getElementById("Slider-hue").oninput = function () {
 }
 
 
-document.getElementById("Slider-sat").oninput = function () {
+document.getElementById("Slider-saturation").oninput = function () {
 	if (hair.includes(current)) {
 		items.fringe.saturation = this.value;
 		items.back.saturation = this.value;
@@ -285,7 +285,7 @@ document.getElementById("Slider-sat").oninput = function () {
 	}
 }
 
-document.getElementById("Slider-bri").oninput = function () {
+document.getElementById("Slider-brightness").oninput = function () {
 	if (hair.includes(current)) {
 		items.fringe.brightness = this.value;
 		items.back.brightness = this.value;
